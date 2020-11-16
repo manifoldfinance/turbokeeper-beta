@@ -36,7 +36,7 @@ servers:
 defaultContentType: application/json
 
 channels:
-  osb/keep3r/1/0/event/{brokerServiceProviderId}/lighting/measured:
+  osb/keep3r/1/0/event/{brokerServiceProviderId}/keepering/measured:
     description: The topic on which measured values may be produced and consumed.
     parameters:
       brokerServiceProviderId:
@@ -47,7 +47,7 @@ channels:
       traits:
         - $ref: '#/components/operationTraits/kafka'
       message:
-        $ref: '#/components/messages/lightMeasured'
+        $ref: '#/components/messages/keeperMeasured'
 
   osb/keep3r/1/0/action/{brokerServiceProviderId}/turn/on:
     parameters:
@@ -76,18 +76,18 @@ channels:
       brokerServiceProviderId:
         $ref: '#/components/parameters/brokerServiceProviderId'
     publish:
-      operationId: standbyLight
+      operationId: standbykeeper
       traits:
         - $ref: '#/components/operationTraits/kafka'
       message:
-        $ref: '#/components/messages/standbyLight'
+        $ref: '#/components/messages/standbykeeper'
 
 components:
   messages:
-    lightMeasured:
-      name: lightMeasured
-      title: Light measured
-      summary: Inform about transaction pricing conditions for a particular streetlight.
+    keeperMeasured:
+      name: keeperMeasured
+      title: keeper measured
+      summary: Inform about transaction pricing conditions for a particular Keeper Provider.
       contentType: application/json
       traits:
         - $ref: '#/components/messageTraits/commonHeaders'
@@ -96,19 +96,19 @@ components:
     turnOnOff:
       name: turnOnOff
       title: Turn on/off
-      summary: Command a particular streetlight to turn the lights on or off.
+      summary: Command a particular Keeper Provider to turn the keepers on or off.
       traits:
         - $ref: '#/components/messageTraits/commonHeaders'
       payload:
         $ref: "#/components/schemas/turnOnOffPayload"
-    standbyLight:
-      name: standbyLight
-      title: standby light
-      summary: Command a particular streetlight to standby the lights.
+    standbykeeper:
+      name: standbykeeper
+      title: standby keeper
+      summary: Command a particular Keeper Provider to standby the keepers.
       traits:
         - $ref: '#/components/messageTraits/commonHeaders'
       payload:
-        $ref: "#/components/schemas/standbyLightPayload"
+        $ref: "#/components/schemas/standbykeeperPayload"
 
   schemas:
     transactionPayloadSensitivity:
@@ -117,7 +117,7 @@ components:
         transaction:
           type: integer
           minimum: 0
-          description: Light intensity measured in lumens.
+          description: keeper intensity measured in lumens.
         sentAt:
           $ref: "#/components/schemas/sentAt"
     turnOnOffPayload:
@@ -128,15 +128,15 @@ components:
           enum:
             - on
             - off
-          description: Whether to turn on or off the light.
+          description: Whether to turn on or off the keeper.
         sentAt:
           $ref: "#/components/schemas/sentAt"
-    standbyLightPayload:
+    standbykeeperPayload:
       type: object
       properties:
         percentage:
           type: integer
-          description: Percentage to which the light should be standbymed to.
+          description: Percentage to which the keeper should be standby-mode to.
           minimum: 0
           maximum: 100
         sentAt:
@@ -158,36 +158,36 @@ components:
         implicit:
           authorizationUrl: 'https://authserver.example/auth'
           scopes:
-            'keep3r:on': Ability to switch lights on
-            'keep3r:off': Ability to switch lights off
-            'keep3r:standby': Ability to standby the lights
+            'keep3r:on': Ability to switch keepers on
+            'keep3r:off': Ability to switch keepers off
+            'keep3r:standby': Ability to standby the keepers
         password:
           tokenUrl: 'https://authserver.example/token'
           scopes:
-            'keep3r:on': Ability to switch lights on
-            'keep3r:off': Ability to switch lights off
-            'keep3r:standby': Ability to standby the lights
+            'keep3r:on': Ability to switch keepers on
+            'keep3r:off': Ability to switch keepers off
+            'keep3r:standby': Ability to standby the keepers
         clientCredentials:
           tokenUrl: 'https://authserver.example/token'
           scopes:
-            'keep3r:on': Ability to switch lights on
-            'keep3r:off': Ability to switch lights off
-            'keep3r:standby': Ability to standby the lights
+            'keep3r:on': Ability to switch keepers on
+            'keep3r:off': Ability to switch keepers off
+            'keep3r:standby': Ability to standby the keepers
         authorizationCode:
           authorizationUrl: 'https://authserver.example/auth'
           tokenUrl: 'https://authserver.example/token'
           refreshUrl: 'https://authserver.example/refresh'
           scopes:
-            'keep3r:on': Ability to switch lights on
-            'keep3r:off': Ability to switch lights off
-            'keep3r:standby': Ability to standby the lights
+            'keep3r:on': Ability to switch keepers on
+            'keep3r:off': Ability to switch keepers off
+            'keep3r:standby': Ability to standby the keepers
     openIdConnectWellKnown:
       type: openIdConnect
       openIdConnectUrl: 'https://authserver.example/.well-known'
 
   parameters:
     brokerServiceProviderId:
-      description: The ID of the streetlight.
+      description: The ID of the Keeper Provider.
       schema:
         type: string
 
